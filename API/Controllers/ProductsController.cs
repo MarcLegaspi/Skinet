@@ -34,7 +34,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery]ProductSpecParams productSpecParams)
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams productSpecParams)
         {
             //var products = await _repo.GetProducts();
             //var products = await _productRepo.ListAllAsync();
@@ -52,7 +52,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             //var product = await _repo.GetProductByIdAsync(id);
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
