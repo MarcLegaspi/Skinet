@@ -84,6 +84,7 @@ export class ShopComponent implements OnInit {
   onSearch(){
     this.shopParams.search = this.searchTerm.nativeElement.value;
     this.shopParams.pageNumber = 1;
+    
     this.getProducts();
   }
 
