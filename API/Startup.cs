@@ -3,6 +3,7 @@ using API.Helpers;
 using API.Middleware;
 using AutoMapper;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -25,22 +26,28 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StoreContext>(x => 
+            services.AddDbContext<StoreContext>(x =>
                 x.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<AppIdentityDbContext>(x =>
+                x.UseSqlite(_configuration.GetConnectionString("IdentityConnection")));
+
             services.AddControllers();
             services.AddAutoMapper(typeof(MappingProfiles));
 
             //redis configuration
-            services.AddSingleton<IConnectionMultiplexer>(c => {
-                var cconfiguration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"),true);
+            services.AddSingleton<IConnectionMultiplexer>(c =>
+            {
+                var cconfiguration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"), true);
                 return ConnectionMultiplexer.Connect(cconfiguration);
             });
-        
+
             services.AddApplicationServices();
+            services.AddIdentityServices(_configuration);
             services.AddSwaggerDocumentation();
-            services.AddCors(options => 
+            services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", policy => 
+                options.AddPolicy("CorsPolicy", policy =>
                 {
                     policy.AllowAnyHeader()
                           .AllowAnyMethod()
@@ -69,6 +76,7 @@ namespace API
 
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSwaggerDocumentation();
