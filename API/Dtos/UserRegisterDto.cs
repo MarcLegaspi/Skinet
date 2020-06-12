@@ -5,7 +5,8 @@ namespace API.Dtos
     public class UserRegisterDto
     {
         [Required]
-        [EmailAddress]
+        //[EmailAddress]        
+        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",ErrorMessage ="Invalid email address") ]
         public string Email { get; set; }
         [Required]
         public string DisplayName { get; set; }
