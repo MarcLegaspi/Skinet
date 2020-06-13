@@ -1,5 +1,6 @@
 using System.Linq;
 using API.Errors;
+using Core.Entities;
 using Core.Interface;
 using Infrastructure.Data;
 using Infrastructure.Services;
@@ -12,21 +13,23 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<ITokenService,TokenService>();
-            services.AddScoped<IProductRepository,ProductRepository>();
-            services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
-            services.AddScoped<IBasketRepository,BasketRepository>();
-            
-            services.Configure<ApiBehaviorOptions>(options => 
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IBasketRepository, BasketRepository>();
+
+            services.Configure<ApiBehaviorOptions>(options =>
             {
-                options.InvalidModelStateResponseFactory = actionContext => 
+                options.InvalidModelStateResponseFactory = actionContext =>
                 {
                     var errors = actionContext.ModelState
                         .Where(e => e.Value.Errors.Count > 0)
                         .SelectMany(e => e.Value.Errors)
                         .Select(e => e.ErrorMessage)
                             .ToArray();
-                            
+
                     var errorResponse = new ApiValidationErrorResponse
                     {
                         Errors = errors
