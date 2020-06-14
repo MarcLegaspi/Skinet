@@ -1,0 +1,29 @@
+<div class="container mt-5">
+    <div *ngIf="orders?.length <= 0">
+        <p>You have no orders</p>
+    </div>
+    <div *ngIf="orders?.length > 0" class="table-responsive table-hover">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="border-0 bg-light">Order
+                    </th>
+                    <th class="border-0 bg-light">Date
+                    </th>
+                    <th class="border-0 bg-light">Total
+                    </th>
+                    <th class="border-0 bg-light">Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of orders" routerLink="/orders/{{order.id}}" >
+                    <td class="align-middle"><strong># {{ order.id }}</strong></td>
+                    <td class="align-middle">{{ order.orderDate | date: 'medium' }}</td>
+                    <td class="align-middle">{{ order.total | currency }}</td>
+                    <td class="align-middle">{{ order.status}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

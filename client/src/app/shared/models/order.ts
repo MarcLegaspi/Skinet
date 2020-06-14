@@ -27,3 +27,9 @@ export interface IOrder {
     status: string;
 }
 
+export interface IOrderSummary {
+    orderId: number;
+    orderDate: Date;
+    total: number;
+    status: string;
+}
